@@ -208,6 +208,7 @@ Semana 8  [███████████████████████
 
 ## 10. Anexos
 
+- **Documento de Propuesta del Proyecto:** https://drive.google.com/file/d/185DP1bk8lG_7iBSqdKosf1Pkb0W6LdAk/view?usp=sharing
 - **Código Fuente:** [Repositorio del proyecto en GitHub](#)
 - **Datos de Campo:** [Respuestas de la Encuesta (Hoja de Cálculo)](#)
 - **Notebook de Análisis:** [Análisis Exploratorio de Datos (Google Colab)](#)
