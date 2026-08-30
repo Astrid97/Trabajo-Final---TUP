@@ -1,6 +1,4 @@
-# Riplat — Gestión Financiera Personal con Asistente IA
-
-> **Aplicación Web Progresiva (PWA) Mobile-First de gestión financiera personal (PFM — Personal Finance Management), impulsada por un asistente conversacional con Inteligencia Artificial y arquitectura Offline-First.**
+<img width="1414" height="2000" alt="Texto del párrafo (1)" src="https://github.com/user-attachments/assets/444251a6-ebeb-475f-a5b4-9d722a575f57" />
 
 ---
 
@@ -32,6 +30,8 @@
 ## 1. Descripción del Proyecto
 
 **Riplat** es una plataforma orientada a simplificar el registro, organización y consulta de la información financiera personal mediante una interfaz de baja fricción, utilizando un **asistente conversacional** como mecanismo principal de interacción.
+
+<img width="2423" height="2048" alt="Comp Mokups" src="https://github.com/user-attachments/assets/b18f4de1-803b-49a5-aa8d-a0c5476f2aa1" />
 
 ### Características Principales:
 - **Registro por Lenguaje Natural:** Centralización de ingresos (diversas fuentes), gastos y reglas personales de administración mediante mensajes simples de chat.
