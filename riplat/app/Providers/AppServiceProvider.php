@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Contracts\MovimientoRepositoryInterface;
+use App\Repositories\Eloquent\MovimientoRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            MovimientoRepositoryInterface::class,
+            MovimientoRepository::class
+        );
     }
 
     /**
