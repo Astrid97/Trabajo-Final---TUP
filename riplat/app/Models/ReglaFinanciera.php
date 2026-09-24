@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\User;
-use App\Models\Categoria;
 
 class ReglaFinanciera extends Model
 {
     use HasFactory;
+
+    protected $table = 'reglas_financieras';
 
     protected $fillable = [
         'user_id',
@@ -20,13 +20,10 @@ class ReglaFinanciera extends Model
         'activa',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'valor' => 'decimal:2',
-            'activa' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'valor' => 'decimal:2',
+        'activa' => 'boolean',
+    ];
 
     public function user(): BelongsTo
     {
