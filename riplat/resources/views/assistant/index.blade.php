@@ -22,7 +22,7 @@
     <div class="chat-thread" id="chat-thread">
         <div class="chat-message bot">
             <strong>Riplat IA</strong>
-            <p>Podés pedirme registrar un gasto o ingreso, por ejemplo: “Gasté $1500 en supermercado”.</p>
+            <p>Podés registrar movimientos, consultar si te alcanza para un gasto y configurar tu saldo mínimo por chat. Por ejemplo: “¿Puedo gastar $8000?” o “Configurá mi saldo mínimo en $400000”.</p>
         </div>
     </div>
 
@@ -64,17 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const message = document.createElement('div');
         message.className = `chat-message ${role}`;
 
-        if (role === 'bot') {
-            message.innerHTML = `
-                <strong>Riplat IA</strong>
-                <p>${text}</p>
-            `;
-        } else {
-            message.innerHTML = `
-                <strong>Vos</strong>
-                <p>${text}</p>
-            `;
-        }
+        const author = document.createElement('strong');
+        author.textContent = role === 'bot' ? 'Riplat IA' : 'Vos';
+
+        const content = document.createElement('p');
+        content.textContent = text;
+
+        message.append(author, content);
 
         thread.appendChild(message);
         thread.scrollTop = thread.scrollHeight;

@@ -414,12 +414,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.key === 'Escape') {
             closeModal();
         } else if (event.key === 'Tab') {
-            if (event.shiftKey && document.activeElement === closeButton) {
+            const focusableElements = Array.from(
+                modal.querySelectorAll('button:not([disabled]), input:not([disabled])')
+            ).filter((element) => element.getClientRects().length > 0);
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (event.shiftKey && document.activeElement === firstElement) {
                 event.preventDefault();
-                button.focus();
-            } else if (!event.shiftKey && document.activeElement === button) {
+                lastElement.focus();
+            } else if (!event.shiftKey && document.activeElement === lastElement) {
                 event.preventDefault();
-                closeButton.focus();
+                firstElement.focus();
             }
         }
     });
@@ -479,7 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         ).format(value);
     };
-
 
     form.addEventListener('submit', async (event) => {
 

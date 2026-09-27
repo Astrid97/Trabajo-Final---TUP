@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FinancialContextController;
 use App\Http\Controllers\MovimientoController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,9 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::get('/perfil/{cuentaId}', [ProfileController::class, 'index'])
+        ->name('profile');
+
     Route::get(
         '/dashboard/{cuentaId}',
         [DashboardController::class, 'index']
@@ -51,6 +55,10 @@ Route::middleware('auth')->group(function (): void {
         '/financial-context/{cuentaId}/evaluar-gasto',
         [FinancialContextController::class, 'evaluarGasto']
     )->name('financial-context.evaluate');
+    Route::put(
+        '/financial-context/{cuentaId}/saldo-minimo',
+        [FinancialContextController::class, 'actualizarSaldoMinimo']
+    )->name('financial-context.minimum-balance.update');
 
     Route::get(
         '/chat-ia/{cuentaId}',

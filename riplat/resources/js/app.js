@@ -1,8 +1,8 @@
 import './bootstrap';
-import { createIcons, House, ArrowLeftRight, Sparkles, Plus, LogOut } from 'lucide';
+import { createIcons, House, ArrowLeftRight, Sparkles, CircleUserRound, Plus, LogOut } from 'lucide';
 import { ArcElement, Chart, DoughnutController, Tooltip } from 'chart.js';
 
-createIcons({ icons: { House, ArrowLeftRight, Sparkles, Plus, LogOut } });
+createIcons({ icons: { House, ArrowLeftRight, Sparkles, CircleUserRound, Plus, LogOut } });
 
 Chart.register(ArcElement, DoughnutController, Tooltip);
 

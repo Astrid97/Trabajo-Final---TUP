@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\IA\AssistantService;
+use App\Services\IA\GeminiApiException;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,6 +46,11 @@ class AssistantController extends Controller
             );
 
             return response()->json($resultado);
+        } catch (GeminiApiException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $e->httpStatus >= 400 && $e->httpStatus < 600 ? $e->httpStatus : 502);
         } catch (Exception $e) {
             Log::error('Error en AssistantController@chat', [
                 'error' => $e->getMessage(),

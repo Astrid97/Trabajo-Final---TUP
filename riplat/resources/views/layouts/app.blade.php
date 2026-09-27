@@ -12,6 +12,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Riplat')</title>
 
@@ -60,6 +61,14 @@
             >
                 <i class="nav-icon" data-lucide="sparkles" aria-hidden="true"></i>
                 <span>Chat IA</span>
+            </a>
+
+            <a
+                href="{{ route('profile', $cuentaId) }}"
+                class="nav-item {{ request()->routeIs('profile') ? 'active' : '' }}"
+            >
+                <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
+                <span>Perfil</span>
             </a>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -111,13 +120,13 @@
         <small>Chat IA</small>
     </a>
 
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button class="mobile-nav-item" type="submit" aria-label="Cerrar sesión">
-            <i class="nav-icon" data-lucide="log-out" aria-hidden="true"></i>
-            <small>Salir</small>
-        </button>
-    </form>
+    <a
+        href="{{ route('profile', $cuentaId) }}"
+        class="mobile-nav-item {{ request()->routeIs('profile') ? 'active' : '' }}"
+    >
+        <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
+        <small>Perfil</small>
+    </a>
 
 </nav>
 @stack('scripts')
