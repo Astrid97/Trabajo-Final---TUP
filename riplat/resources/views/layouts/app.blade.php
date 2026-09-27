@@ -1,3 +1,7 @@
+@php
+    $cuentaId = auth()->user()?->cuenta?->id ?? 1;
+@endphp
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,7 +14,7 @@
 
     <title>@yield('title', 'Riplat')</title>
 
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
 </head>
 
@@ -33,23 +37,32 @@
 
         <nav class="sidebar-nav">
 
-            <a href="#" class="nav-item active">
-                <span class="nav-icon">⌂</span>
+            <a
+                href="{{ route('dashboard', $cuentaId) }}"
+                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+            >
+                <i class="nav-icon" data-lucide="house" aria-hidden="true"></i>
                 <span>Inicio</span>
             </a>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">↕</span>
+            <a
+                href="{{ route('movimientos.index', $cuentaId) }}"
+                class="nav-item {{ request()->routeIs('movimientos.index') ? 'active' : '' }}"
+            >
+                <i class="nav-icon" data-lucide="arrow-left-right" aria-hidden="true"></i>
                 <span>Movimientos</span>
             </a>
 
-            <a href="#" class="nav-item">
-                <span class="nav-icon">✦</span>
+            <a
+                href="{{ route('assistant.index', $cuentaId) }}"
+                class="nav-item {{ request()->routeIs('assistant.index') ? 'active' : '' }}"
+            >
+                <i class="nav-icon" data-lucide="sparkles" aria-hidden="true"></i>
                 <span>Chat IA</span>
             </a>
 
             <a href="#" class="nav-item">
-                <span class="nav-icon">○</span>
+                <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
                 <span>Perfil</span>
             </a>
 
@@ -70,27 +83,36 @@
 
 <nav class="mobile-nav">
 
-    <a href="#" class="mobile-nav-item active">
-        <span>⌂</span>
+    <a
+        href="{{ route('dashboard', $cuentaId) }}"
+        class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+    >
+        <i class="nav-icon" data-lucide="house" aria-hidden="true"></i>
         <small>Inicio</small>
     </a>
 
-    <a href="#" class="mobile-nav-item">
-        <span>↕</span>
+    <a
+        href="{{ route('movimientos.index', $cuentaId) }}"
+        class="mobile-nav-item {{ request()->routeIs('movimientos.index') ? 'active' : '' }}"
+    >
+        <i class="nav-icon" data-lucide="arrow-left-right" aria-hidden="true"></i>
         <small>Movimientos</small>
     </a>
 
-    <a href="#" class="mobile-nav-item">
-        <span>✦</span>
+    <a
+        href="{{ route('assistant.index', $cuentaId) }}"
+        class="mobile-nav-item {{ request()->routeIs('assistant.index') ? 'active' : '' }}"
+    >
+        <i class="nav-icon" data-lucide="sparkles" aria-hidden="true"></i>
         <small>Chat IA</small>
     </a>
 
     <a href="#" class="mobile-nav-item">
-        <span>○</span>
+        <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
         <small>Perfil</small>
     </a>
 
 </nav>
-
+@stack('scripts')
 </body>
 </html>

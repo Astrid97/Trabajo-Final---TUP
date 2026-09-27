@@ -19,7 +19,7 @@ class MovimientoService
 
             $datos['fecha'] = $datos['fecha'] ?? now()->toDateString();
             
-            $datos['estado'] = $datos['estado'] ?? 'confirmado';
+            $datos['estado'] = $datos['estado'] ?? 'CONFIRMADO';
 
             return $this->movimientoRepository->crear($datos);
         });

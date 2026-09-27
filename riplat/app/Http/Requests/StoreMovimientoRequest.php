@@ -14,13 +14,46 @@ class StoreMovimientoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cuenta_id'    => ['required', 'integer', 'exists:cuentas,id'],
-            'categoria_id' => ['nullable', 'integer', 'exists:categorias,id'],
-            'tipo'         => ['required', 'string', 'in:ingreso,gasto'],
-            'monto'        => ['required', 'numeric', 'min:0.01'],
-            'fecha'        => ['nullable', 'date'],
-            'descripcion'  => ['nullable', 'string', 'max:255'],
-            'estado'       => ['nullable', 'string', 'in:pendiente,confirmado,anulado'],
+            'cuenta_id' => [
+                'required',
+                'integer',
+                'exists:cuentas,id',
+            ],
+
+            'categoria_id' => [
+                'required',
+                'integer',
+                'exists:categorias,id',
+            ],
+
+            'tipo' => [
+                'required',
+                'string',
+                'in:INGRESO,GASTO',
+            ],
+
+            'monto' => [
+                'required',
+                'numeric',
+                'gt:0',
+            ],
+
+            'fecha' => [
+                'nullable',
+                'date',
+            ],
+
+            'descripcion' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'estado' => [
+                'nullable',
+                'string',
+                'in:CONFIRMADO,ANULADO',
+            ],
         ];
     }
 }

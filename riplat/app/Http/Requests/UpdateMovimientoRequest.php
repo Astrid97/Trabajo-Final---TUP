@@ -14,13 +14,41 @@ class UpdateMovimientoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cuenta_id'    => ['sometimes', 'integer', 'exists:cuentas,id'],
-            'categoria_id' => ['sometimes', 'nullable', 'integer', 'exists:categorias,id'],
-            'tipo'         => ['sometimes', 'string', 'in:ingreso,gasto'],
-            'monto'        => ['sometimes', 'numeric', 'min:0.01'],
-            'fecha'        => ['sometimes', 'date'],
-            'descripcion'  => ['sometimes', 'nullable', 'string', 'max:255'],
-            'estado'       => ['sometimes', 'string', 'in:pendiente,confirmado,anulado'],
+            'categoria_id' => [
+                'sometimes',
+                'integer',
+                'exists:categorias,id',
+            ],
+
+            'tipo' => [
+                'sometimes',
+                'string',
+                'in:INGRESO,GASTO',
+            ],
+
+            'monto' => [
+                'sometimes',
+                'numeric',
+                'gt:0',
+            ],
+
+            'fecha' => [
+                'sometimes',
+                'date',
+            ],
+
+            'descripcion' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'estado' => [
+                'sometimes',
+                'string',
+                'in:CONFIRMADO,ANULADO',
+            ],
         ];
     }
 }

@@ -105,60 +105,49 @@
             </div>
         </div>
 
-        <div class="category-list">
+        @if(count($resumen['gastos_por_categoria']))
+            <div class="category-breakdown">
+                <div class="category-chart-wrap">
+                    <canvas
+                        id="category-doughnut"
+                        role="img"
+                        aria-label="Distribución de gastos por categoría"
+                    ></canvas>
+                    <div class="category-chart-center" aria-hidden="true">
+                        <span>Total gastos</span>
+                        <strong>$ {{ number_format($resumen['total_gastos'], 0, ',', '.') }}</strong>
+                    </div>
+                </div>
 
-            @forelse($resumen['gastos_por_categoria'] as $gasto)
-
-                <div class="category-item">
-
-                    <div class="category-info">
-
-                        <div>
-                            <strong>
-                                {{ $gasto['categoria'] }}
+                <div
+                    class="category-list"
+                    id="category-list"
+                    aria-label="Detalle de gastos por categoría"
+                >
+                    @foreach($resumen['gastos_por_categoria'] as $gasto)
+                        <div class="category-item">
+                            <span class="category-swatch" aria-hidden="true"></span>
+                            <div class="category-info">
+                                <strong>{{ $gasto['categoria'] }}</strong>
+                                <span>$ {{ number_format($gasto['total'], 0, ',', '.') }}</span>
+                            </div>
+                            <strong class="category-percentage">
+                                {{ number_format($gasto['porcentaje'], 1, ',', '.') }}%
                             </strong>
-
-                            <span>
-                                $ {{ number_format(
-                                    $gasto['total'],
-                                    0,
-                                    ',',
-                                    '.'
-                                ) }}
-                            </span>
                         </div>
-
-                        <strong>
-                            {{ number_format(
-                                $gasto['porcentaje'],
-                                1,
-                                ',',
-                                '.'
-                            ) }}%
-                        </strong>
-
-                    </div>
-
-                    <div class="category-progress">
-
-                        <div
-                            class="category-progress-value"
-                            style="width: {{ $gasto['porcentaje'] }}%"
-                        ></div>
-
-                    </div>
-
+                    @endforeach
                 </div>
-
-            @empty
-
-                <div class="empty-state">
-                    Todavía no hay gastos registrados.
-                </div>
-
-            @endforelse
-
-        </div>
+            </div>
+            <div
+                id="category-chart-data"
+                data-categories="{{ json_encode($resumen['gastos_por_categoria']) }}"
+                hidden
+            ></div>
+        @else
+            <div class="empty-state">
+                Todavía no hay gastos registrados.
+            </div>
+        @endif
 
     </article>
     <article class="panel">
@@ -257,8 +246,31 @@
 
     </article>
 
+</section>
 
-    <article class="panel financial-panel">
+<button
+    type="button"
+    class="floating-button modal-trigger"
+    id="open-expense-modal"
+    aria-label="¿Puedo gastar?"
+    aria-controls="expense-modal"
+    aria-expanded="false"
+    data-tooltip="¿Puedo gastar?"
+>?</button>
+
+<div class="modal-overlay" id="expense-modal" aria-hidden="true">
+    <article
+        class="panel financial-panel modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="expense-modal-title"
+    >
+        <button
+            type="button"
+            class="modal-close"
+            id="close-expense-modal"
+            aria-label="Cerrar"
+        >×</button>
         <div class="financial-illustration">
             <img
                 src="{{ asset('images/riplat-logo-light.jpg') }}"
@@ -268,10 +280,10 @@
 
         <div>
             <p class="eyebrow">
-                Tu contexto
+                ¿Puedo gastar?
             </p>
 
-            <h3>
+            <h3 id="expense-modal-title">
                 Evaluá un gasto
             </h3>
 
@@ -363,12 +375,53 @@
 
     </article>
 
-</section>
+</div>
 
 @endsection
 
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    const modal = document.getElementById('expense-modal');
+    const openButton = document.getElementById('open-expense-modal');
+    const closeButton = document.getElementById('close-expense-modal');
+
+    function closeModal() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        openButton.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('modal-open');
+        openButton.focus();
+    }
+
+    openButton.addEventListener('click', () => {
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        openButton.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('modal-open');
+        closeButton.focus();
+    });
+
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (!modal.classList.contains('is-open')) return;
+
+        if (event.key === 'Escape') {
+            closeModal();
+        } else if (event.key === 'Tab') {
+            if (event.shiftKey && document.activeElement === closeButton) {
+                event.preventDefault();
+                button.focus();
+            } else if (!event.shiftKey && document.activeElement === button) {
+                event.preventDefault();
+                closeButton.focus();
+            }
+        }
+    });
 
     const form = document.getElementById(
         'expense-evaluation-form'
@@ -578,3 +631,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 </script>
+@endpush
