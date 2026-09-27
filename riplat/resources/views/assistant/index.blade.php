@@ -27,12 +27,6 @@
     </div>
 
     <form id="chat-form" class="chat-form" action="{{ route('assistant.chat') }}">
-        <input
-            type="hidden"
-            name="cuenta_id"
-            value="{{ $cuentaId }}"
-        >
-
         <textarea
             id="chat-input"
             name="mensaje"
@@ -107,8 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
-                    mensaje,
-                    cuenta_id: Number(form.elements.namedItem('cuenta_id').value)
+                    mensaje
                 })
             });
 

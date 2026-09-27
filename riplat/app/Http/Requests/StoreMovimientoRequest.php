@@ -14,12 +14,6 @@ class StoreMovimientoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cuenta_id' => [
-                'required',
-                'integer',
-                'exists:cuentas,id',
-            ],
-
             'categoria_id' => [
                 'required',
                 'integer',

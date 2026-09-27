@@ -11,22 +11,24 @@ class FinancialContextController extends Controller
 {
     public function __construct(
         private FinancialContextService $financialContextService
-    ) {
-    }
+    ) {}
 
     public function evaluarGasto(
         Request $request,
-        int $userId,
         int $cuentaId
     ): JsonResponse {
+        $user = $request->user();
+        $cuenta = $user->cuenta;
+        abort_unless($cuenta && $cuenta->id === $cuentaId, 404);
+
         $datos = $request->validate([
             'monto' => ['required', 'numeric', 'gt:0'],
         ]);
 
         try {
             $resultado = $this->financialContextService->evaluarGasto(
-                $userId,
-                $cuentaId,
+                $user->id,
+                $cuenta->id,
                 (float) $datos['monto']
             );
 

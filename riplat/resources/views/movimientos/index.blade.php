@@ -193,13 +193,6 @@
         >
             @csrf
 
-            <input
-                type="hidden"
-                name="cuenta_id"
-                value="{{ $cuentaId }}"
-            >
-
-
             <div class="form-field">
 
                 <label for="tipo">

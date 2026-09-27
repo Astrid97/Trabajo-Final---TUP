@@ -8,11 +8,11 @@
 
     <div>
         <p class="eyebrow">Resumen financiero</p>
-        <h1>Hola, Carina</h1>
+        <h1>Hola, {{ auth()->user()->username }}</h1>
     </div>
 
     <div class="avatar">
-        C
+        {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
     </div>
 
 </header>
@@ -296,6 +296,7 @@
         <form
             id="expense-evaluation-form"
             class="expense-form"
+            data-evaluation-url="{{ route('financial-context.evaluate', $cuentaId) }}"
         >
             <label for="expense-amount">
                 Monto a evaluar
@@ -506,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
 
             const url =
-                `/financial-context/1/{{ $cuentaId }}/evaluar-gasto`
+                `${form.dataset.evaluationUrl}`
                 + `?monto=${encodeURIComponent(amount)}`;
 
 

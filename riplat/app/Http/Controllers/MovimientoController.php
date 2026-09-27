@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMovimientoRequest;
 use App\Http\Requests\UpdateMovimientoRequest;
 use App\Models\Categoria;
-use App\Models\Movimiento;
 use App\Services\MovimientoService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
@@ -15,12 +15,14 @@ class MovimientoController extends Controller
 {
     public function __construct(
         private MovimientoService $movimientoService
-    ) {
-    }
+    ) {}
 
-    public function index(int $cuentaId): View
+    public function index(Request $request, int $cuentaId): View
     {
-        $movimientos = Movimiento::where('cuenta_id', $cuentaId)
+        $cuenta = $request->user()->cuenta;
+        abort_unless($cuenta && $cuenta->id === $cuentaId, 404);
+
+        $movimientos = $cuenta->movimientos()
             ->with('categoria')
             ->orderByDesc('fecha')
             ->get();
@@ -37,9 +39,14 @@ class MovimientoController extends Controller
 
     public function store(StoreMovimientoRequest $request)
     {
+        $cuenta = $request->user()->cuenta;
+        abort_unless($cuenta, 403);
+
         $movimiento = $this->movimientoService
             ->registrarMovimiento(
-                $request->validated()
+                array_merge($request->validated(), [
+                    'cuenta_id' => $cuenta->id,
+                ])
             );
 
         if ($request->expectsJson()) {
@@ -65,6 +72,10 @@ class MovimientoController extends Controller
         UpdateMovimientoRequest $request,
         int $id
     ): JsonResponse {
+        $cuenta = $request->user()->cuenta;
+        abort_unless($cuenta, 403);
+        $cuenta->movimientos()->findOrFail($id);
+
         $movimiento = $this->movimientoService
             ->corregirMovimiento(
                 $id,

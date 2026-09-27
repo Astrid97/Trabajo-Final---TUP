@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cuenta;
-use Illuminate\Http\Request;
 use App\Services\IA\AssistantService;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AssistantController extends Controller
 {
     public function __construct(
-        private readonly AssistantService $assistantService)
-    {}
+        private readonly AssistantService $assistantService) {}
 
     public function index(int $cuentaId): View
     {
+        $cuenta = request()->user()->cuenta;
+        abort_unless($cuenta && $cuenta->id === $cuentaId, 404);
+
         return view('assistant.index', [
-            'cuentaId' => $cuentaId,
+            'cuentaId' => $cuenta->id,
         ]);
     }
 
     public function chat(Request $request)
     {
         $request->validate([
-            'mensaje' => 'required|string|max:255'
+            'mensaje' => 'required|string|max:255',
         ]);
-        
-        $cuenta = $request->user()?->cuenta
-        //usado para pruebas ELIMINAR EN PRODUCCION!!! 
-            ?? Cuenta::find($request->input('cuenta_id', 1));
 
-        if (!$cuenta) {
+        $cuenta = $request->user()->cuenta;
+
+        if (! $cuenta) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'No tienes una cuenta financiera configurada.'
+                'message' => 'No tienes una cuenta financiera configurada.',
             ], 403);
         }
 
@@ -55,7 +54,7 @@ class AssistantController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Hubo un error al procesar tu solicitud. Intentá nuevamente en unos minutos.'
+                'message' => 'Hubo un error al procesar tu solicitud. Intentá nuevamente en unos minutos.',
             ], 500);
         }
     }

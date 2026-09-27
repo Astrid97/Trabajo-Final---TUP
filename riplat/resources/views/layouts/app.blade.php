@@ -1,5 +1,6 @@
 @php
-    $cuentaId = auth()->user()?->cuenta?->id ?? 1;
+    $cuentaId = auth()->user()->cuenta?->id;
+    abort_unless($cuentaId, 403);
 @endphp
 
 <!DOCTYPE html>
@@ -38,8 +39,8 @@
         <nav class="sidebar-nav">
 
             <a
-                href="{{ route('dashboard', $cuentaId) }}"
-                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                href="{{ route('dashboard.account', $cuentaId) }}"
+                class="nav-item {{ request()->routeIs('dashboard.account') ? 'active' : '' }}"
             >
                 <i class="nav-icon" data-lucide="house" aria-hidden="true"></i>
                 <span>Inicio</span>
@@ -61,10 +62,13 @@
                 <span>Chat IA</span>
             </a>
 
-            <a href="#" class="nav-item">
-                <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
-                <span>Perfil</span>
-            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="nav-item" type="submit">
+                    <i class="nav-icon" data-lucide="log-out" aria-hidden="true"></i>
+                    <span>Cerrar sesión</span>
+                </button>
+            </form>
 
         </nav>
 
@@ -84,8 +88,8 @@
 <nav class="mobile-nav">
 
     <a
-        href="{{ route('dashboard', $cuentaId) }}"
-        class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+        href="{{ route('dashboard.account', $cuentaId) }}"
+        class="mobile-nav-item {{ request()->routeIs('dashboard.account') ? 'active' : '' }}"
     >
         <i class="nav-icon" data-lucide="house" aria-hidden="true"></i>
         <small>Inicio</small>
@@ -107,10 +111,13 @@
         <small>Chat IA</small>
     </a>
 
-    <a href="#" class="mobile-nav-item">
-        <i class="nav-icon" data-lucide="circle-user-round" aria-hidden="true"></i>
-        <small>Perfil</small>
-    </a>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button class="mobile-nav-item" type="submit" aria-label="Cerrar sesión">
+            <i class="nav-icon" data-lucide="log-out" aria-hidden="true"></i>
+            <small>Salir</small>
+        </button>
+    </form>
 
 </nav>
 @stack('scripts')
