@@ -7,7 +7,7 @@ use App\Models\Categoria;
 use App\Services\IA\GeminiService;
 use App\Services\MovimientoService;
 use Carbon\Carbon;
-use Exception;
+use App\Models\Movimiento;
 
 class AssistantService
 {
@@ -41,7 +41,12 @@ class AssistantService
             ]
         ];
 
-        $response = $this->gemini->analyzeIntent($prompt, $tools);
+        $instruccionSistema = 'Sos el asistente financiero virtual de la app Riplat.'
+            . 'Hablá en argentino, de forma muy amigable, natural y concisa. '
+            . 'Si el usuario te saluda, te dice "te quiero" o habla de temas fuera de las finanzas, '
+            . 'respondé con calidez y recordale sutilmente que estás para ayudarle a registrar sus movimientos.';
+
+        $response = $this->gemini->analyzeIntent($prompt, $tools, $instruccionSistema);
         $parts = $response['candidates'][0]['content']['parts'] ?? [];
         
         foreach ($parts as $part) {
@@ -49,10 +54,17 @@ class AssistantService
                 return $this->ejecutarRegistro($part['functionCall']['args'], $cuenta);
             }
         }
-
-        return [
+        // Si no hubo function call, buscamos si Gemini generó una respuesta en texto
+        $textoGenerado = collect($parts)
+            ->pluck('text')
+            ->filter() // descarta valores null o vacíos
+            ->implode(' ');
+        
+            return [
             'status' => 'info',
-            'message' => 'No comprendí la transacción. ¿Podrías especificar el monto y en qué lo gastaste?'
+            'message' => $textoGenerado !== ''
+            ? $textoGenerado
+            : 'No comprendí la transacción. ¿Podrías decirme si fue un ingreso o un gasto, el monto, y en que concepto?',
         ];
     }
 
