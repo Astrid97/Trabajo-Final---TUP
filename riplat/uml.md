@@ -1,119 +1,92 @@
 ## Diagrama de clases - Primer flujo vertical
-
+El siguiente diagrama representa las principales clases que participan en el primer flujo vertical funcional de Riplat. Incluye la autenticación del usuario, la gestión de su cuenta y movimientos, la visualización del dashboard, la evaluación de gastos mediante reglas financieras y la integración del asistente con Gemini.
 ```mermaid
 classDiagram
 
-    class User {
-        +id
-        +username
-        +email
-        +password
-    }
+class User {
+    +int id
+    +string username
+    +string email
+    +string password
+}
 
-    class Cuenta {
-        +id
-        +user_id
-        +nombre
-        +moneda
-    }
+class Cuenta {
+    +int id
+    +int user_id
+    +string nombre
+    +string moneda
+}
 
-    class Categoria {
-        +id
-        +nombre
-        +tipo
-    }
+class Categoria {
+    +int id
+    +string nombre
+    +string tipo
+}
 
-    class Movimiento {
-        +id
-        +cuenta_id
-        +categoria_id
-        +tipo
-        +monto
-        +fecha
-        +descripcion
-        +estado
-    }
+class Movimiento {
+    +int id
+    +int cuenta_id
+    +int categoria_id
+    +string tipo
+    +decimal monto
+    +datetime fecha
+    +string descripcion
+    +string estado
+}
 
-    class ReglaFinanciera {
-        +id
-        +user_id
-        +categoria_id
-        +tipo
-        +valor
-        +activa
-    }
+class ReglaFinanciera {
+    +int id
+    +int user_id
+    +int categoria_id
+    +string tipo
+    +decimal valor
+    +boolean activa
+}
 
-    class MovimientoController {
-        +store()
-        +update()
-    }
+class DashboardService {
+    +obtenerResumen(cuentaId)
+    +calcularSaldo(cuentaId)
+    +obtenerGastosPorCategoria(cuentaId)
+}
 
-    class MovimientoService {
-        +registrarMovimiento()
-        +corregirMovimiento()
-    }
+class MovimientoService {
+    +registrarMovimiento(datos)
+    +corregirMovimiento(id, datos)
+}
 
-    class MovimientoRepository {
-        +crear()
-        +buscarPorId()
-        +actualizar()
-    }
+class FinancialContextService {
+    +evaluarGasto(userId, cuentaId, monto)
+}
 
-    class DashboardController {
-        +index()
-    }
+class RuleEngineService {
+    +obtenerSaldoMinimo(userId)
+    +evaluarSaldoMinimo(userId, saldoPosterior)
+}
 
-    class DashboardService {
-        +obtenerResumen()
-        +calcularSaldo()
-    }
+class AssistantService {
+    +procesarMensaje()
+}
 
-    class AssistantController {
-        +procesar()
-    }
+class GeminiService {
+    +interpretarMensaje()
+}
 
-    class AssistantService {
-        +procesarMensaje()
-        +ejecutarTool()
-    }
+User "1" --> "1" Cuenta : posee
+Cuenta "1" --> "*" Movimiento : registra
+Categoria "1" --> "*" Movimiento : clasifica
 
-    class GeminiService {
-        +interpretar()
-    }
+User "1" --> "*" ReglaFinanciera : configura
+Categoria "0..1" --> "*" ReglaFinanciera : aplica a
 
-    class FinancialContextService {
-        +obtenerContexto()
-        +evaluarGasto()
-    }
+DashboardService ..> Movimiento : consulta
+MovimientoService ..> Movimiento : gestiona
+FinancialContextService ..> DashboardService : obtiene saldo
+FinancialContextService ..> RuleEngineService : evalua reglas
+RuleEngineService ..> ReglaFinanciera : consulta
 
-    class RuleEngineService {
-        +obtenerReglasActivas()
-        +evaluarReglas()
-    }
-
-    User "1" --> "1" Cuenta : posee
-    User "1" --> "*" ReglaFinanciera : configura
-
-    Cuenta "1" --> "*" Movimiento : registra
-
-    Categoria "1" --> "*" Movimiento : clasifica
-    Categoria "1" --> "0..*" ReglaFinanciera : aplica
-
-    MovimientoController --> MovimientoService
-    MovimientoService --> MovimientoRepository
-    MovimientoRepository --> Movimiento
-
-    DashboardController --> DashboardService
-    DashboardService --> MovimientoRepository
-
-    AssistantController --> AssistantService
-    AssistantService --> GeminiService
-    AssistantService --> MovimientoService
-    AssistantService --> FinancialContextService
-
-    FinancialContextService --> MovimientoRepository
-    FinancialContextService --> RuleEngineService
-    RuleEngineService --> ReglaFinanciera
+AssistantService ..> GeminiService : interpreta
+AssistantService ..> MovimientoService : registra movimientos
+AssistantService ..> FinancialContextService : evalua gastos
+AssistantService ..> RuleEngineService : aplica reglas
 ```
-
-    Este diagrama representa la arquitectura inicial de Riplat para implementar el primer flujo vertical del sistema. La lógica de negocio se concentra en los servicios, mientras que los repositorios se encargan del acceso a los datos. Para el registro mediante lenguaje natural, el proveedor de IA interpreta el mensaje y genera una operación estructurada, pero la validación y ejecución quedan a cargo del backend en Laravel.
+    Este diagrama representa la arquitectura del primer flujo vertical funcional de Riplat. La lógica de negocio se concentra principalmente en los servicios, que se encargan de gestionar los movimientos, calcular la información del dashboard y evaluar las reglas financieras configuradas por el usuario. Para las operaciones mediante lenguaje natural, Gemini interpreta el mensaje y genera una operación estructurada, mientras que la validación, los cálculos y la ejecución quedan a cargo del backend desarrollado en Laravel.  
