@@ -1,5 +1,5 @@
 ## Diagrama de clases - Primer flujo vertical
-El siguiente diagrama representa las principales clases que participan en el primer flujo vertical funcional de Riplat. Incluye la autenticación del usuario, la gestión de su cuenta y movimientos, la visualización del dashboard, la evaluación de gastos mediante reglas financieras y la integración del asistente con Gemini.
+
 ```mermaid
 classDiagram
 
@@ -89,4 +89,5 @@ AssistantService ..> MovimientoService : registra movimientos
 AssistantService ..> FinancialContextService : evalua gastos
 AssistantService ..> RuleEngineService : aplica reglas
 ```
-    Este diagrama representa la arquitectura del primer flujo vertical funcional de Riplat. La lógica de negocio se concentra principalmente en los servicios, que se encargan de gestionar los movimientos, calcular la información del dashboard y evaluar las reglas financieras configuradas por el usuario. Para las operaciones mediante lenguaje natural, Gemini interpreta el mensaje y genera una operación estructurada, mientras que la validación, los cálculos y la ejecución quedan a cargo del backend desarrollado en Laravel.  
+
+Este diagrama representa la arquitectura del primer flujo vertical funcional de Riplat. La lógica de negocio se concentra principalmente en los servicios, que se encargan de gestionar los movimientos, calcular la información del dashboard y evaluar las reglas financieras configuradas por el usuario. Para las operaciones mediante lenguaje natural, Gemini interpreta el mensaje y genera una operación estructurada, mientras que la validación, los cálculos y la ejecución quedan a cargo del backend desarrollado en Laravel.  
