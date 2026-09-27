@@ -17,7 +17,7 @@ class GeminiService
         $this->baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
     }
 
-    public function analyzeIntent(string $prompt, array $tools)
+    public function analyzeIntent(string $prompt, array $tools, ?string $systemInstruction = null)
     {
         $payload = [
             'contents' => [
@@ -30,6 +30,14 @@ class GeminiService
             ],
             'tools' => $tools,
         ];
+
+        if ($systemInstruction !== null) {
+            $payload['systemInstruction'] = [
+                'parts' => [
+                    ['text' => $systemInstruction],
+                ],
+            ];
+        }
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
