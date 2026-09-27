@@ -11,12 +11,9 @@ use Illuminate\View\View;
 
 class AssistantController extends Controller
 {
-    private $assistantService;
-
-    public function __construct(AssistantService $assistantService)
-    {
-        $this->assistantService = $assistantService;
-    }
+    public function __construct(
+        private readonly AssistantService $assistantService)
+    {}
 
     public function index(int $cuentaId): View
     {
@@ -30,8 +27,9 @@ class AssistantController extends Controller
         $request->validate([
             'mensaje' => 'required|string|max:255'
         ]);
-
+        
         $cuenta = $request->user()?->cuenta
+        //usado para pruebas ELIMINAR EN PRODUCCION!!! 
             ?? Cuenta::find($request->input('cuenta_id', 1));
 
         if (!$cuenta) {

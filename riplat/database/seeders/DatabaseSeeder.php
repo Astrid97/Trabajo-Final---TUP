@@ -12,5 +12,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RiplatSeeder::class,
         ]);
+
+        $this->call([
+            CategoriaSeeder::class,
+        ]);
     }
 }

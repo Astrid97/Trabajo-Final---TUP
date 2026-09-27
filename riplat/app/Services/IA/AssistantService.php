@@ -58,22 +58,47 @@ class AssistantService
 
     private function ejecutarRegistro(array $args, Cuenta $cuenta)
     {
+        // 1. Validamos el TIPO primero, porque las validaciones siguientes lo necesitan
+        //    para armar mensajes de error coherentes (ej: listar categorías de ESE tipo).
+        if (!in_array($args['tipo'], ['INGRESO', 'GASTO'], true)) {
+            return [
+                'status' => 'info',
+                'message' => "No entendí si fue un ingreso o un gasto. ¿Podrías reformularlo? Por ejemplo: 'gasté 500 en comida' o 'cobré 1000 de sueldo'.",
+            ];
+        }
+
+        // 2. Buscamos la categoría por nombre (es la columna única en tu tabla)
         $categoria = Categoria::where('nombre', $args['categoria'])->first();
 
         if (!$categoria) {
-            throw new Exception("La IA seleccionó una categoría inválida.");
+            // No existe esa categoría en absoluto: le mostramos las opciones válidas
+            // PARA EL TIPO que ya confirmamos en el paso 1.
+            $categoriasValidas = Categoria::where('tipo', $args['tipo'])->pluck('nombre');
+
+            return [
+                'status' => 'info',
+                'message' => "No reconocí la categoría '{$args['categoria']}'. Las categorías disponibles para un {$args['tipo']} son: " . $categoriasValidas->implode(', ') . '.',
+            ];
         }
 
-        if (!in_array($args['tipo'], ['INGRESO', 'GASTO'], true)) {
-            throw new Exception("La IA devolvió un tipo de movimiento inválido: {$args['tipo']}");
+        // 3. La categoría existe, pero puede no corresponder al tipo que interpretó la IA
+        //    (ej: Gemini dice GASTO pero la categoría "Sueldo" es de tipo INGRESO)
+        if ($categoria->tipo !== $args['tipo']) {
+            return [
+                'status' => 'info',
+                'message' => "La categoría '{$categoria->nombre}' es de tipo {$categoria->tipo}, no {$args['tipo']}. ¿Podrías confirmar el movimiento?",
+            ];
         }
 
+        // 4. Validamos que el monto sea un número positivo
         if (!is_numeric($args['monto']) || $args['monto'] <= 0) {
-            throw new Exception("La IA devolvió un monto inválido.");
+            return [
+                'status' => 'info',
+                'message' => "No pude identificar un monto válido. ¿Podrías indicarme el importe exacto?",
+            ];
         }
 
-        
-    
+        // 5. Si llegamos hasta acá, todos los datos son válidos: registramos el movimiento
         $datosMovimiento = [
             'cuenta_id' => $cuenta->id,
             'categoria_id' => $categoria->id,
@@ -81,16 +106,15 @@ class AssistantService
             'monto' => $args['monto'],
             'descripcion' => $args['descripcion'] ?? null,
             'fecha' => Carbon::now()->toDateString(),
-            'estado' => 'CONFIRMADO'
+            'estado' => 'CONFIRMADO',
         ];
 
-        
         $movimiento = $this->movimientoService->registrarMovimiento($datosMovimiento);
 
         return [
             'status' => 'success',
             'message' => "¡Listo! Registré un {$args['tipo']} de \${$args['monto']} en la categoría {$categoria->nombre}.",
-            'movimiento' => $movimiento
+            'movimiento' => $movimiento,
         ];
     }
 }
