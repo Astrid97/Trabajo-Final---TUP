@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#11cec7">
+    <title>Sin conexión | Riplat</title>
+    <style>
+        :root { color-scheme: light; font-family: "Avenir Next", system-ui, sans-serif; color: #15202b; background: #eef4f4; }
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; display: grid; place-items: center; margin: 0; padding: 24px; }
+        main { width: min(100%, 440px); padding: 32px; border: 1px solid #e6ecef; border-radius: 18px; background: #fff; box-shadow: 0 12px 28px rgba(7, 17, 28, .06); }
+        img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; }
+        h1 { margin: 24px 0 8px; font-size: 1.6rem; }
+        p { margin: 0; color: #71808e; line-height: 1.55; }
+        button { margin-top: 24px; padding: 13px 18px; border: 0; border-radius: 10px; background: #11cec7; color: #07111c; font: inherit; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="/pwa-icon-192.png" alt="Riplat">
+        <h1>No hay conexión</h1>
+        <p>Conectate a internet para consultar tus datos financieros. Riplat no guarda información financiera privada en este dispositivo.</p>
+        <button type="button" onclick="location.reload()">Reintentar</button>
+    </main>
+</body>
+</html>

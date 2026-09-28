@@ -2091,6 +2091,62 @@ body.modal-open {
     width: auto;
 }
 
+.pwa-install-control {
+    position: fixed;
+    left: 252px;
+    bottom: 20px;
+    z-index: 70;
+    display: grid;
+    justify-items: start;
+    gap: 8px;
+}
+
+.pwa-install-control[hidden],
+.pwa-install-help[hidden] {
+    display: none;
+}
+
+.pwa-install-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 14px;
+    border: 1px solid var(--riplat-border);
+    border-radius: 8px;
+    background: white;
+    color: var(--riplat-dark);
+    box-shadow: var(--shadow);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pwa-install-button:hover {
+    border-color: var(--riplat-primary-dark);
+}
+
+.pwa-install-button .nav-icon,
+.pwa-install-button svg {
+    width: 17px;
+    height: 17px;
+    color: var(--riplat-primary-dark);
+}
+
+.pwa-install-help {
+    width: min(300px, calc(100vw - 24px));
+    padding: 10px 12px;
+    border: 1px solid var(--riplat-border);
+    border-radius: 8px;
+    background: white;
+    color: var(--riplat-text);
+    box-shadow: var(--shadow);
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
 @media (max-width: 600px) {
     .profile-panel {
         gap: 20px;
@@ -2103,5 +2159,16 @@ body.modal-open {
     .profile-save-button,
     .profile-logout-form .secondary-button {
         width: 100%;
+    }
+
+    .pwa-install-control {
+        left: 12px;
+        bottom: 82px;
+    }
+
+    .pwa-install-button {
+        min-height: 40px;
+        padding: 0 12px;
+        font-size: 0.76rem;
     }
 }
